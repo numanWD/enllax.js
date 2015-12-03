@@ -1,0 +1,29 @@
+{
+  "name": "enllax.js",
+  "authors": [
+    "NumanWD <diegosevillano@gmail.com>"
+  ],
+  "description": "jQuery Parallax Scrolling Effect",
+  "main": "jquery.enllax.js",
+  "moduleType": [],
+  "keywords": [
+    "parallax",
+    "scroll",
+    "scrolling",
+    "jquery",
+    "smooth",
+    "animation"
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

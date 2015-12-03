@@ -1,15 +1,15 @@
 /**
-  * jQuery.enllax.js v1.1.0
-  * https://github.com/mmkjony/enllax.js
-  * demo: http://mmkjony.github.io/enllax.js/
+  * jQuery.enllax.js v1.2
+  * https://github.com/numanWD/enllax.js
   *
-  * Copyright 2015, MMK Jony
   * This content is released under the MIT license
  **/
 
+/* global jQuery */
+
 (function($){
     'use strict';
-    
+
     $.fn.enllax = function(opt){
         
         var winHeight = $(window).height();
@@ -49,30 +49,30 @@
             }
             else { dir = options.direction; }
             
-            var bgY = Math.round(offset * ratio);
-            var transform = Math.round((offset - (winHeight / 2) + height) * ratio);
+            var bgY = offset * ratio;
+            var transform = (offset - (winHeight / 2) + height) * ratio;
             
-            if(type == 'background') {
-                if(dir == 'vertical') {
+            if(type === 'background') {
+                if(dir === 'vertical') {
                     $this.css({
                         'background-position': 'center ' + -bgY + 'px'
                     });
                 }
-                else if(dir == 'horizontal') {
+                else if(dir === 'horizontal') {
                     $this.css({
                         'background-position': -bgY + 'px' + ' center'
                     });
                 }
             }
-            else if(type == 'foreground') {
-                if(dir == 'vertical') {
+            else if(type === 'foreground') {
+                if(dir === 'vertical') {
                     $this.css({
                         '-webkit-transform': 'translateY(' + transform + 'px)',
                         '-moz-transform': 'translateY(' + transform + 'px)',
                         'transform': 'translateY(' + transform + 'px)'
                     });
                 }
-                else if(dir == 'horizontal') {
+                else if(dir === 'horizontal') {
                     $this.css({
                         '-webkit-transform': 'translateX(' + transform + 'px)',
                         '-moz-transform': 'translateX(' + transform + 'px)',
@@ -84,30 +84,30 @@
             $(window).on('scroll', function(){
                 var scrolling = $(this).scrollTop();
                 
-                bgY = Math.round((offset - scrolling) * ratio);
-                transform = Math.round(((offset - (winHeight / 2) + height) - scrolling) * ratio);
+                bgY = (offset - scrolling) * ratio;
+                transform = ((offset - (winHeight / 2) + height) - scrolling) * ratio;
                 
-                if(type == 'background') {
-                    if(dir == 'vertical') {
+                if(type === 'background') {
+                    if(dir === 'vertical') {
                         $this.css({
                             'background-position': 'center ' + -bgY + 'px'
                         });
                     }
-                    else if(dir == 'horizontal') {
+                    else if(dir === 'horizontal') {
                         $this.css({
                             'background-position': -bgY + 'px' + ' center'
                         });
                     }
                 }
-                else if((type == 'foreground') && (scrolling < docHeight)) {
-                    if(dir == 'vertical') {
+                else if((type === 'foreground') && (scrolling < docHeight)) {
+                    if(dir === 'vertical') {
                         $this.css({
                             '-webkit-transform': 'translateY(' + transform + 'px)',
                             '-moz-transform': 'translateY(' + transform + 'px)',
                             'transform': 'translateY(' + transform + 'px)'
                         });
                     }
-                    else if(dir == 'horizontal') {
+                    else if(dir === 'horizontal') {
                         $this.css({
                             '-webkit-transform': 'translateX(' + transform + 'px)',
                             '-moz-transform': 'translateX(' + transform + 'px)',
@@ -117,7 +117,6 @@
                 }
             });
         });
-        
     };
     
 })(jQuery);
