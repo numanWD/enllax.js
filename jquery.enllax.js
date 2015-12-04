@@ -1,16 +1,16 @@
 /**
-  * jQuery.enllax.js v1.2
+  * enllax.js v1.2
   * https://github.com/numanWD/enllax.js
   *
   * This content is released under the MIT license
  **/
 
-/* global jQuery */
+var enllax = {};
 
-(function($){
+
+enllax = (function(opt) {
     'use strict';
 
-    $.fn.enllax = function(opt){
         
         var winHeight = $(window).height();
         var docHeight = $(document).height();
@@ -80,43 +80,55 @@
                     });
                 }
             }
-            
-            $(window).on('scroll', function(){
+
+            window.addEventListener('scroll', function()
+            {
                 var scrolling = $(this).scrollTop();
-                
+
                 bgY = (offset - scrolling) * ratio;
                 transform = ((offset - (winHeight / 2) + height) - scrolling) * ratio;
-                
-                if(type === 'background') {
-                    if(dir === 'vertical') {
-                        $this.css({
-                            'background-position': 'center ' + -bgY + 'px'
-                        });
+
+                if (type === 'background') {
+                    if (dir === 'vertical') {
+                        $this.css(
+                            {
+                                'background-position': 'center ' + -bgY + 'px'
+                            }
+                        );
                     }
-                    else if(dir === 'horizontal') {
-                        $this.css({
-                            'background-position': -bgY + 'px' + ' center'
-                        });
-                    }
+                    else
+                        if (dir === 'horizontal') {
+                            $this.css(
+                                {
+                                    'background-position': -bgY + 'px' + ' center'
+                                }
+                            );
+                        }
                 }
-                else if((type === 'foreground') && (scrolling < docHeight)) {
-                    if(dir === 'vertical') {
-                        $this.css({
-                            '-webkit-transform': 'translateY(' + transform + 'px)',
-                            '-moz-transform': 'translateY(' + transform + 'px)',
-                            'transform': 'translateY(' + transform + 'px)'
-                        });
-                    }
-                    else if(dir === 'horizontal') {
-                        $this.css({
-                            '-webkit-transform': 'translateX(' + transform + 'px)',
-                            '-moz-transform': 'translateX(' + transform + 'px)',
-                            'transform': 'translateX(' + transform + 'px)'
-                        });
+                else {
+                    if ((type === 'foreground') && (scrolling < docHeight)) {
+                        if (dir === 'vertical') {
+                            $this.css(
+                                {
+                                    '-webkit-transform': 'translateY(' + transform + 'px)',
+                                    '-moz-transform':    'translateY(' + transform + 'px)',
+                                    'transform':         'translateY(' + transform + 'px)'
+                                }
+                            );
+                        }
+                        else
+                            if (dir === 'horizontal') {
+                                $this.css(
+                                    {
+                                        '-webkit-transform': 'translateX(' + transform + 'px)',
+                                        '-moz-transform':    'translateX(' + transform + 'px)',
+                                        'transform':         'translateX(' + transform + 'px)'
+                                    }
+                                );
+                            }
                     }
                 }
             });
         });
-    };
     
-})(jQuery);
+})();
