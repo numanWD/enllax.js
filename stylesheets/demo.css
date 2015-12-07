@@ -1,0 +1,9 @@
+.content {
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.content--1 {
+    padding-bottom: 35%;
+    background-image: url(../images/demo--1.jpg);
+}

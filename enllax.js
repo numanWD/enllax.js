@@ -1,6 +1,13 @@
 /**
+ * enllax.js v2.0
  *
- */
+ * Parallax Library in VanillaJS, with foreground and background images in Scroll.
+ *
+ * @author: Diego Sevillano
+ * @url: https://github.com/numanWD/enllax.js
+ *
+ * This content is released under the MIT license
+ **/
 
 ;(function (name, root, definition) {
     'use strict';
@@ -17,182 +24,171 @@
     else {
         root[name] = definition();
     }
-}('enllax', this, function (ele, opt) {
+}('enllax', this, function () {
     'use strict';
 
 
     var win = window,
         doc = win.document,
         html = doc.documentElement,
-        prefixes = ['webkit', 'Moz', 'ms', 'O', ''], /* Vendor prefixes */
-        winHeight = win.innerHeight,
-        docHeight = doc.innerHeight;
+        winHeight = win.innerHeight;
 
 
+    /**
+     * Default values of the library
+     * @type {{ratio: number, type: string, direction: string}}
+     */
     var defaults = {
-        ratio: 0,
+        ratio: 0.1,
         type: 'background', //foreground
         direction: 'vertical' //horizontal
     };
 
-    /**
-     * Tries various vendor prefixes and returns the first supported property.
-     */
-    function vendor (el, prop) {
-        var s = el.style,
-            pp, i;
-
-        prop = prop.charAt(0).toUpperCase() + prop.slice(1);
-        if (s[prop] !== undefined) {
-            return prop;
-        }
-        for (i = 0; i < prefixes.length; i++) {
-            pp = prefixes[i]+prop;
-            if (s[pp] !== undefined) {
-                return pp;
-            }
-        }
-    }
-
-    function extend (target, source) {
-        var a = Object.create(target);
-        Object.keys(source).map(function (prop) {
-            prop in a && (a[prop] = source[prop]);
-        });
-        return a;
-    }
 
     /**
-     * Sets multiple style properties at once.
+     * Setting vendor-prefixed CSS using javascript
      */
-    function css (el, prop) {
-        el.style[vendor(el, prop)] = prop;
-        return el;
+    var transformProp = function(){
+        var testEl = document.createElement('div');
+        if(testEl.style.transform === null) {
+            var vendors = ['Webkit', 'Moz', 'ms'];
+            for(var vendor in vendors) {
+                if(testEl.style[ vendors[vendor] + 'Transform' ] !== undefined) {
+                    return vendors[vendor] + 'Transform';
+                }
+            }
+        }
+        return 'transform';
+    }();
+
+
+    /**
+     * Merge the contents of two or more objects together into the first object.
+     *
+     * @param defaults
+     * @param options
+     * @returns {{}}
+     * @private
+     */
+    function _extend( defaults, options ) {
+        var extended = {};
+        var prop;
+        for (prop in defaults) {
+            if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
+                extended[prop] = defaults[prop];
+            }
+        }
+        for (prop in options) {
+            if (Object.prototype.hasOwnProperty.call(options, prop)) {
+                extended[prop] = options[prop];
+            }
+        }
+        return extended;
     }
 
-    var settings = extend(defaults, opt);
+    /**
+     * Get the current coordinates of the first element in the set of matched elements, relative to the document.
+     *
+     * @param elt
+     * @returns {{top: number, left: number}}
+     * @private
+     */
+    function _offset(elt) {
+        var rect = elt.getBoundingClientRect(), bodyElt = document.body;
 
-    function parall () {
-        var ratio;
-        var type;
-        var dir;
-        var $this = $(this);
-        var offset = $this.offset().top;
-        var height = $this.outerHeight();
-        var dataRat = $this.data('enllax-ratio');
-        var dataType = $this.data('enllax-type');
-        var dataDir = $this.data('enllax-direction');
+        return {
+            top: rect.top + bodyElt.scrollTop,
+            left: rect.left + bodyElt.scrollLeft
+        };
+    }
 
-        if(dataRat) {
-            ratio = dataRat;
+    /**
+     * Create the translate property in horizontal or vertical
+     *
+     *
+     * @param dir
+     * @param value
+     * @returns string ex. translate3d(x,y,z)
+     * @private
+     */
+    function _translate3d(dir, value) {
+        var property = "translate3d(";
+
+        if (dir === 'horizontal') {
+            property += value + "px,0,0)";
+        } else {
+            property += "0," + value + "px,0)";
         }
-        else { ratio = options.ratio; }
+        return property;
+    }
 
-        if(dataType) {
-            type = dataType;
-        }
-        else { type = options.type; }
 
-        if(dataDir) {
-            dir = dataDir;
-        }
-        else { dir = options.direction; }
-
-        var bgY = offset * ratio;
-        var transform = (offset - (winHeight / 2) + height) * ratio;
-
-        if(type === 'background') {
-            if(dir === 'vertical') {
-                $this.css({
-                    'background-position': 'center ' + -bgY + 'px'
-                });
-            }
-            else if(dir === 'horizontal') {
-                $this.css({
-                    'background-position': -bgY + 'px' + ' center'
-                });
-            }
-        }
-        else if(type === 'foreground') {
-            if(dir === 'vertical') {
-                $this.css({
-                    '-webkit-transform': 'translateY(' + transform + 'px)',
-                    '-moz-transform': 'translateY(' + transform + 'px)',
-                    'transform': 'translateY(' + transform + 'px)'
-                });
-            }
-            else if(dir === 'horizontal') {
-                $this.css({
-                    '-webkit-transform': 'translateX(' + transform + 'px)',
-                    '-moz-transform': 'translateX(' + transform + 'px)',
-                    'transform': 'translateX(' + transform + 'px)'
-                });
+    function _selector(target) {
+        var collection = [],
+            selectedElements,
+            i;
+        if (typeof target === "string") {
+            selectedElements = document.querySelectorAll(target);
+            for (i = 0; i < selectedElements.length; ++i) {
+                collection.push(selectedElements[i]);
             }
         }
+        return collection;
+    }
 
-        window.addEventListener('scroll', function()
-        {
-            var scrolling = $(this).scrollTop();
+    /**
+     *
+     * @param element
+     * @param options
+     */
+    function init (target, options) {
 
-            bgY = (offset - scrolling) * ratio;
-            transform = ((offset - (winHeight / 2) + height) - scrolling) * ratio;
+        var collection = _selector(target),
+            opts = _extend(defaults, options),
+            offset,
+            height;
 
-            if (type === 'background') {
-                if (dir === 'vertical') {
-                    $this.css(
-                        {
-                            'background-position': 'center ' + -bgY + 'px'
-                        }
-                    );
-                }
-                else
-                    if (dir === 'horizontal') {
-                        $this.css(
-                            {
-                                'background-position': -bgY + 'px' + ' center'
-                            }
-                        );
-                    }
-            }
-            else {
-                if ((type === 'foreground') && (scrolling < docHeight)) {
-                    if (dir === 'vertical') {
-                        $this.css(
-                            {
-                                '-webkit-transform': 'translateY(' + transform + 'px)',
-                                '-moz-transform':    'translateY(' + transform + 'px)',
-                                'transform':         'translateY(' + transform + 'px)'
-                            }
-                        );
-                    }
-                    else
-                        if (dir === 'horizontal') {
-                            $this.css(
-                                {
-                                    '-webkit-transform': 'translateX(' + transform + 'px)',
-                                    '-moz-transform':    'translateX(' + transform + 'px)',
-                                    'transform':         'translateX(' + transform + 'px)'
-                                }
-                            );
-                        }
-                }
-            }
+
+        collection.forEach(function(ele) {
+            offset = _offset(ele).top;
+            height = ele.offsetHeight;
+
+            win.addEventListener('scroll', function() {
+                _transformation(ele);
+            });
+            win.addEventListener('resize', function() {
+                offset = _offset(ele).top;
+                height = ele.offsetHeight;
+                _transformation(ele);
+            });
         });
-    }(element, options);
 
-    // expose useful methods
-    morpheus.tween = tween
-    morpheus.getStyle = getStyle
-    morpheus.bezier = bezier
-    morpheus.transform = transform
-    morpheus.parseTransform = parseTransform
-    morpheus.formatTransform = formatTransform
-    morpheus.animationFrame = frame
-    morpheus.easings = {}
 
-    return morpheus;
+        /**
+         * Transformation function depends of the type
+         */
+        var _transformation = function(element) {
+
+            if(opts.type === 'background') {
+
+                var directionBG = opts.direction === 'vertical'? '-y': '-x';
+                element.style['background-position'] = 'center';
+
+                return function () {
+                    var bgY = (offset - win.scrollY) * opts.ratio;
+                    element.style['background-position' + directionBG] = -bgY + 'px';
+                };
+
+            }
+            else if(opts.type === 'foreground') {
+
+                return function () {
+                    var transform = ((offset - (winHeight / 2) + height) - win.scrollY) * opts.ratio;
+                    element.style[transformProp] = _translate3d(opts.direction, transform);
+                };
+            }
+        }();
+    }
+    return init;
 
 }));
-
-
-https://github.com/ded/morpheus/blob/master/src/morpheus.js
