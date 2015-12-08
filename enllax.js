@@ -39,7 +39,7 @@
      * @type {{ratio: number, type: string, direction: string}}
      */
     var defaults = {
-        ratio: 0.1,
+        ratio: 0.5,
         type: 'background', //foreground
         direction: 'vertical' //horizontal
     };
@@ -103,26 +103,11 @@
     }
 
     /**
-     * Create the translate property in horizontal or vertical
      *
-     *
-     * @param dir
-     * @param value
-     * @returns string ex. translate3d(x,y,z)
+     * @param target
+     * @returns {Array}
      * @private
      */
-    function _translate3d(dir, value) {
-        var property = "translate3d(";
-
-        if (dir === 'horizontal') {
-            property += value + "px,0,0)";
-        } else {
-            property += "0," + value + "px,0)";
-        }
-        return property;
-    }
-
-
     function _selector(target) {
         var collection = [],
             selectedElements,
@@ -138,28 +123,26 @@
 
     /**
      *
-     * @param element
+     * @param target
      * @param options
      */
     function init (target, options) {
 
         var collection = _selector(target),
-            opts = _extend(defaults, options),
-            offset,
-            height;
+            opts = _extend(defaults, options);
 
 
         collection.forEach(function(ele) {
-            offset = _offset(ele).top;
-            height = ele.offsetHeight;
+            var offset = _offset(ele).top,
+                height = ele.offsetHeight;
 
             win.addEventListener('scroll', function() {
-                _transformation(ele);
+                _transformation(ele, offset, height);
             });
             win.addEventListener('resize', function() {
                 offset = _offset(ele).top;
                 height = ele.offsetHeight;
-                _transformation(ele);
+                _transformation(ele, offset, height);
             });
         });
 
@@ -167,24 +150,28 @@
         /**
          * Transformation function depends of the type
          */
-        var _transformation = function(element) {
+        var _transformation = function() {
 
+            var aux1 = '', aux2 = '';
             if(opts.type === 'background') {
-
-                var directionBG = opts.direction === 'vertical'? '-y': '-x';
-                element.style['background-position'] = 'center';
-
-                return function () {
-                    var bgY = (offset - win.scrollY) * opts.ratio;
-                    element.style['background-position' + directionBG] = -bgY + 'px';
+                aux1 = 'center ';
+                if (opts.direction === 'horizontal') {
+                    aux1 = ''; aux2 = ' center';
+                }
+                return function (element, offset, height) {
+                    var bgPosition = (offset - win.scrollY) * opts.ratio;
+                    element.style['background-position'] = aux1 + -bgPosition+ "px" + aux2;
                 };
-
             }
             else if(opts.type === 'foreground') {
-
-                return function () {
+                if (opts.direction === 'horizontal') {
+                    aux2 = ',0';
+                } else {
+                    aux1 = '0,';
+                }
+                return function (element, offset, height) {
                     var transform = ((offset - (winHeight / 2) + height) - win.scrollY) * opts.ratio;
-                    element.style[transformProp] = _translate3d(opts.direction, transform);
+                    element.style[transformProp] = "translate3d("+aux1+transform+"px"+aux2+",0)";
                 };
             }
         }();
