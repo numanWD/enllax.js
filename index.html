@@ -14,7 +14,7 @@
 <section class="page-header">
     <h1 class="project-name">Enllax.js</h1>
 
-    <h2 class="project-tagline">Enllax is an ultra-lightweight (~1kb) and super easy to use plugin for parallax scrolling effect.</h2>
+    <h2 class="project-tagline">Enllax.js is an ultra-lightweight parallax Library in VanillaJS, with foreground and background images on Scroll.</h2>
     <a href="https://github.com/numanWD/enllax.js" class="btn">View on GitHub</a>
     <a href="https://github.com/numanWD/enllax.js/zipball/master" class="btn">Download .zip</a>
     <a href="https://github.com/numanWD/enllax.js/tarball/master" class="btn">Download .tar.gz</a>
@@ -23,37 +23,127 @@
 <section>
     <div class="main-content">
         <h2>Background Parallax</h2>
-        <h3>Parameters</h3>
-        <pre>
-        {
-            ratio: 0.9
-        }</pre>
-
+        <p>Default behaviour.</p>
+        <h3>Code:</h3>
+        <pre>enllax('#js-content-1');</pre>
     </div>
 
     <div class="content content--1" id="js-content-1"></div>
 
     <div class="main-content">
-        <h3>Background Parallax</h3>
+        <h2>Background and Foreground Parallax</h2>
 
-        <pre>
-        {
-            ratio: 0.6
-        }
-        {
-            ratio: 0.8,
-            type: 'foreground'
-        }
-        </pre>
+        <p>We have a background parallax with a <code>ratio .6</code> of the normal scroll.</p>
+        <p>If you scroll 100px the image will scroll 60px.</p>
+        <p>We have a foreground horizontal parallax</p>
 
+        <h3>Code</h3>
+<pre>
+    //Background
+    enllax('.content--2', {
+        ratio: .6
+    });
+
+    //Foreground
+    enllax('.foreground--1', {
+        ratio: -.8,
+        type: 'foreground',
+        direction: 'horizontal'
+    });
+</pre>
     </div>
 
     <div class="content content--2">
-        <img src="images/demo--2.jpeg" class="foreground--1">
+        <img src="images/parallax-front.png" class="foreground--1">
+    </div>
+
+    <div class="main-content">
+        <h2>Background Static</h2>
+        <p><code>ratio: 1</code></p>
+        <h3>Code:</h3>
+<pre>
+    enllax('#js-content-2', {
+        ratio: 1
+    });
+</pre>
+    </div>
+
+    <div class="content content--1" id="js-content-2"></div>
+
+    <div class="main-content">
+        <h2>Multi Parallax - Rocket</h2>
+        <p>In this example we have implemented one background and 3 foreground parallax.</p>
+        <h3>Code:</h3>
+<pre>
+    enllax('#js-rocket-1', {
+            ratio: 0.1
+    });
+    enllax('#js-rocket-fg-1', {
+        ratio: 0.1,
+        type: 'foreground'
+    });
+    enllax('#js-rocket-fg-2', {
+        ratio: 0.15,
+        type: 'foreground'
+    });
+    enllax('#js-rocket-fg-3', {
+        ratio: 0.6,
+        type: 'foreground'
+    });
+</pre>
+    </div>
+
+    <div class="content content--rocket" id="js-rocket-1">
+        <div class="content content--rocket--2"  id="js-rocket-2">
+            <img src="images/rocket/world-1.svg" id="js-rocket-fg-1" class="rocket__img--1">
+            <img src="images/rocket/world-2.svg" id="js-rocket-fg-2" class="rocket__img--2">
+            <img src="images/rocket/spaceship.svg" id="js-rocket-fg-3" class="rocket__img--3">
+        </div>
     </div>
 
 
     <div class="main-content">
+        <h2>How to use it:</h2>
+
+        <p><em>Enllax.js</em> doesn't have any dependency.<br>To make it work just</p>
+        <p>Load the <em>Enllax.js</em> library in the footer</p>
+
+<pre>
+<code>
+    &lt;script src="enllax.js""&gt;&lt;/script"&gt;
+</code>
+</pre>
+
+        <p>After the library open a script tag and call the function</p>
+
+<pre>
+<code>
+    &lt;script src="enllax.js""&gt;
+        enllax('.selector');
+        enllax('#selector');
+    &lt;/script"&gt;
+</code>
+</pre>
+
+        <p>You can use any of the css selectors.</p>
+
+            <ul>
+                <li>#{id} - Id</li>
+                <li>.{class} - Class</li>
+                <li>...</li>
+            </ul>
+
+        <p>As second argument of the function, you can pass an object with specific parameters, by default the values are:</p>
+
+<pre>
+<code>
+    {
+        ratio: 0.5,
+        type: 'background', // foreground
+        direction: 'vertical' // horizontal
+    }
+</code>
+</pre>
 
         <footer class="site-footer">
             <span class="site-footer-owner"><a href="https://github.com/numanWD/enllax.js">Enllax.js</a> is maintained by <a href="https://github.com/numanWD">numanWD</a>.</span>
@@ -69,9 +159,31 @@
         enllax('#js-content-1');
         enllax('.content--2', {ratio: .6});
         enllax('.foreground--1', {
-            ratio: .8,
-            type: 'foreground'
+            ratio: -.8,
+            type: 'foreground',
+            direction: 'horizontal'
           });
+        enllax('#js-content-2', {
+            ratio: .1
+        });
+
+        //Rocket
+        enllax('#js-rocket-1', {
+            ratio: .1
+        });
+        enllax('#js-rocket-fg-1', {
+            ratio: .1,
+            type: 'foreground'
+        });
+        enllax('#js-rocket-fg-2', {
+            ratio: .15,
+            type: 'foreground'
+        });
+        enllax('#js-rocket-fg-3', {
+            ratio: .6,
+            type: 'foreground'
+        });
+
     })();
 </script>
 </body>
