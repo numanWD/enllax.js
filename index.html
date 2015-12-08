@@ -20,28 +20,60 @@
     <a href="https://github.com/numanWD/enllax.js/tarball/master" class="btn">Download .tar.gz</a>
 </section>
 
-<section class="main-content">
-    <h3>Foreground Parallax</h3>
-
-    <div class="content content--1">
+<section>
+    <div class="main-content">
+        <h2>Background Parallax</h2>
+        <h3>Parameters</h3>
+        <pre>
+        {
+            ratio: 0.9
+        }</pre>
 
     </div>
 
-    <h3>Backround Parallax</h3>
+    <div class="content content--1" id="js-content-1"></div>
+
+    <div class="main-content">
+        <h3>Background Parallax</h3>
+
+        <pre>
+        {
+            ratio: 0.6
+        }
+        {
+            ratio: 0.8,
+            type: 'foreground'
+        }
+        </pre>
+
+    </div>
 
     <div class="content content--2">
-
+        <img src="images/demo--2.jpeg" class="foreground--1">
     </div>
 
-    <h3>Backround Parallax</h3>
 
-    <div class="content content--3">
+    <div class="main-content">
 
+        <footer class="site-footer">
+            <span class="site-footer-owner"><a href="https://github.com/numanWD/enllax.js">Enllax.js</a> is maintained by <a href="https://github.com/numanWD">numanWD</a>.</span>
+        </footer>
     </div>
-
-    <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/numanWD/enllax.js">Enllax.js</a> is maintained by <a href="https://github.com/numanWD">numanWD</a>.</span>
-    </footer>
 </section>
+<script src="enllax.js"></script>
+<script>
+    /**
+     * Your Custom code
+     */
+    (function () {
+        enllax('#js-content-1');
+        enllax('.content--2', {ratio: .6});
+        enllax('.foreground--1', {
+            ratio: .8,
+            type: 'foreground'
+          });
+    })();
+</script>
 </body>
 </html>
+
