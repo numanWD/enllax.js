@@ -1,0 +1,55 @@
+.content {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url(../images/parallax-back.jpg);
+    background-repeat: repeat-y;
+}
+
+.content--1 {
+    padding-bottom: 35%;
+}
+
+.content--2 {
+    padding-top: 5em;
+    padding-bottom: 5em;
+    text-align: center;
+    overflow: hidden;
+}
+
+.content--rocket {
+    padding-bottom: 50%;
+    background-color: #426b6f;
+    background-image: url(../images/rocket/stars.png);
+    position: relative;
+}
+.content--rocket--2 {
+    position: absolute;
+    top:0;
+    width: 100%;
+    bottom: 0;
+    background-image: url(../images/rocket/clouds.png);
+    background-repeat: no-repeat;
+}
+
+.content--rocket img {
+    position: absolute;
+}
+.rocket__img--1 {
+    top: 10%;
+    left: 10%;
+    max-width: 15%;
+}
+.rocket__img--2 {
+    top: 18%;
+    right: 10%;
+    max-width: 15%;
+}
+.rocket__img--3 {
+    right: 40%;
+    max-width: 15%;
+}
+
+.foreground--1 {
+    max-width: 30%;
+    margin: auto;
+}
