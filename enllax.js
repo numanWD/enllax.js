@@ -1,7 +1,7 @@
 /**
  * enllax.js v2.0
  *
- * Parallax Library in VanillaJS, with foreground and background images in Scroll.
+ * Parallax Library in VanillaJS, with foreground and background images on Scroll.
  *
  * @author: Diego Sevillano
  * @url: https://github.com/numanWD/enllax.js
@@ -142,6 +142,7 @@
             win.addEventListener('resize', function() {
                 offset = _offset(ele).top;
                 height = ele.offsetHeight;
+                winHeight = win.innerHeight;
                 _transformation(ele, offset, height);
             });
         });
